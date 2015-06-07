@@ -13,20 +13,19 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/', function ($request, $response) {
-            $response->writeHead(200, array('Content-Type' => 'text/plain'));
-            $response->end("Hello World\n");
+        $app->get('/', function () {
+            return("Hello World");
         });
 
         $conn = $this->getMock('React\Socket\ConnectionInterface');
         $conn
-            ->expects($this->at(0))
+            ->expects($this->at(3))
             ->method('write')
-            ->with($this->stringContains("text/plain"));
+            ->with($this->stringContains("text/html"));
         $conn
-            ->expects($this->at(1))
+            ->expects($this->at(4))
             ->method('write')
-            ->with($this->stringContains("Hello World\n"));
+            ->with($this->stringContains("Hello World"));
 
         $request = new Request('GET', '/');
         $response = new Response($conn);

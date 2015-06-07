@@ -25,18 +25,15 @@ composer](http://getcomposer.org).
 $app = new React\Espresso\Application();
 
 $app->get('/', function ($request, $response) {
-    $response->writeHead(200, array('Content-Type' => 'text/plain'));
-    $response->end("Hello World\n");
+    return 'Hello World';
 });
 
-$app->get('/favicon.ico', function ($request, $response) {
-    $response->writeHead(204);
-    $response->end();
+$app->get('/hello/{name}', function($name) use($app) {
+    return 'Hello '.$app->escape($name);
 });
 
-$app->get('/humans.txt', function ($request, $response) {
-    $response->writeHead(200, array('Content-Type' => 'text/plain'));
-    $response->end("I believe you are a humanoid robot.\n");
+$app->error(function (\Exception $e, $code) use ($app) {
+	return 'Page not found';
 });
 
 $stack = new React\Espresso\Stack($app);

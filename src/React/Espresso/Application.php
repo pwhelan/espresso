@@ -10,29 +10,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Application extends BaseApplication
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $app = $this;
-
-        $this['controllers_factory'] = function () use ($app) {
-            return new ControllerCollection($app['route_factory']);
-        };
-    }
-
     public function __invoke(Request $request, Response $response)
     {
-        $sfRequest = $this->buildSymfonyRequest($request, $response);
-        $this->handle($sfRequest, HttpKernelInterface::MASTER_REQUEST, false);
-    }
-
-    private function buildSymfonyRequest(Request $request, Response $response)
-    {
         $sfRequest = SymfonyRequest::create($request->getPath(), $request->getMethod());
-        $sfRequest->attributes->set('react.espresso.request', $request);
-        $sfRequest->attributes->set('react.espresso.response', $response);
+        $sfResponse = $this->handle($sfRequest, HttpKernelInterface::MASTER_REQUEST, true);
 
-        return $sfRequest;
+        $response->writeHead($sfResponse->getStatusCode(), ['Content-Type' => 'text/html']);
+        $response->end($sfResponse->getContent());
     }
 }
