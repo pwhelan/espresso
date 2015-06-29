@@ -14,7 +14,7 @@ composer](http://getcomposer.org).
 {
     "require": {
         "minimum-stability": "dev",
-        "react/espresso": "0.2.*"
+        "aheart/espresso": "0.2.*"
     }
 }
 ```
