@@ -3,7 +3,6 @@
 namespace React\Tests\Espresso;
 
 use React\Espresso\Application;
-use React\Espresso\Stack;
 use React\Http\Request;
 use React\Http\Response;
 
@@ -14,18 +13,18 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->get('/', function () {
-            return("Hello World");
+            return('Hello World');
         });
 
         $conn = $this->getMock('React\Socket\ConnectionInterface');
         $conn
             ->expects($this->at(3))
             ->method('write')
-            ->with($this->stringContains("text/html"));
+            ->with($this->stringContains('text/html'));
         $conn
             ->expects($this->at(4))
             ->method('write')
-            ->with($this->stringContains("Hello World"));
+            ->with($this->stringContains('Hello World'));
 
         $request = new Request('GET', '/');
         $response = new Response($conn);
