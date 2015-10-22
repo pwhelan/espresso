@@ -3,23 +3,23 @@
 React/Espresso is a proof-of-concept microframework that integrates Silex with
 React/Http.
 
-[![Build Status](https://travis-ci.org/aheart/espresso.svg?branch=master)](https://travis-ci.org/aheart/espresso)
+[![Build Status](https://travis-ci.org/pwhelan/espresso.svg?branch=master)](https://travis-ci.org/pwhelan/espresso)
 
 ## Install
 
 The recommended way to install react/espresso is [through
 composer](http://getcomposer.org).
 
-```JSON
-{
-    "require": {
-        "minimum-stability": "dev",
-        "aheart/espresso": "0.2.*"
-    }
-}
+```
+$ composer require react/espresso
 ```
 
 ## Example
+
+> All your Controllers can remain the same, the conversion between symfony's request/response and
+> reactphp's request/response is done automatically.
+
+### react.php
 
 ```php
 $app = new React\Espresso\Application();
@@ -40,11 +40,19 @@ $stack = new React\Espresso\Stack($app);
 $stack->listen(1337);
 ```
 
+```
+$ php react.php
+```
+
+> now visit  [http://localhost:1337/hello/react](http://localhost:1337/hello/react)
+
 ## Tests
 
 To run the test suite, you need PHPUnit.
 
-    $ phpunit
+```
+$ phpunit
+```
 
 ## License
 
