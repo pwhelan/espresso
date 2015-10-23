@@ -2,8 +2,8 @@
 
 namespace React\Espresso;
 
-use React\Http\Request;
-use React\Http\Response;
+use React\Http\Request as ReactRequest;
+use React\Http\Response as ReactResponse;
 use Silex\Application as BaseApplication;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -16,14 +16,23 @@ class Application extends BaseApplication
      * @param  Response   $response
      * @throws \Exception
      */
-    public function __invoke(Request $request, Response $response)
+    public function __invoke(ReactRequest $request, ReactResponse $response)
     {
         try {
             $sfRequest = $this->buildSymfonyRequest($request, $response);
             $r = $this->handle($sfRequest, HttpKernelInterface::MASTER_REQUEST, false);
             /** @var \Symfony\Component\HttpFoundation\Response $r */
-            $response->writeHead($r->getStatusCode(), $r->headers->allPreserveCase());
-            $response->end($r->getContent());
+            if ($r->getStatusCode() != 100)
+            {
+                $response->writeHead($r->getStatusCode(), $r->headers->allPreserveCase());
+            }
+            if ($r instanceof Response && $r->getStatusCode() == 100)
+            {
+            }
+            else
+            {
+                $response->end($r->getContent());
+            }
         } catch (\Exception $e) {
             $response->writeHead($e instanceof HttpException ? $e->getStatusCode() : 500);
             $response->end($e->getMessage());
@@ -35,7 +44,7 @@ class Application extends BaseApplication
      * @param  Response       $response
      * @return SymfonyRequest
      */
-    private function buildSymfonyRequest(Request $request, Response $response)
+    private function buildSymfonyRequest(ReactRequest $request, ReactResponse $response)
     {
         $sfRequest = SymfonyRequest::create($request->getPath(), $request->getMethod(), $request->getQuery());
         $sfRequest->attributes->set('react.espresso.request', $request);
